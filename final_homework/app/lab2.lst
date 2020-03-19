@@ -1,0 +1,1161 @@
+GAS LISTING C:\Users\Á¤¹Î±³\AppData\Local\Temp/ccNFmLgr.s 			page 1
+
+
+   1               		.file	"lab2.c"
+   2               	__SREG__ = 0x3f
+   3               	__SP_H__ = 0x3e
+   4               	__SP_L__ = 0x3d
+   5               	__CCP__  = 0x34
+   6               	__tmp_reg__ = 0
+   7               	__zero_reg__ = 1
+   8               		.text
+   9               	.global	__vector_10
+  10               		.type	__vector_10, @function
+  11               	__vector_10:
+  12 0000 1F92      		push __zero_reg__
+  13 0002 0F92      		push r0
+  14 0004 0FB6      		in r0,__SREG__
+  15 0006 0F92      		push r0
+  16 0008 0BB6      		in r0,91-32
+  17 000a 0F92      		push r0
+  18 000c 1124      		clr __zero_reg__
+  19 000e 8F93      		push r24
+  20 0010 9F93      		push r25
+  21 0012 EF93      		push r30
+  22 0014 FF93      		push r31
+  23               	/* prologue: Signal */
+  24               	/* frame size = 0 */
+  25 0016 8091 0000 		lds r24,buzzer_state
+  26 001a 9091 0000 		lds r25,(buzzer_state)+1
+  27 001e 0197      		sbiw r24,1
+  28 0020 01F0      		breq .L6
+  29 0022 80E1      		ldi r24,lo8(16)
+  30 0024 88BB      		out 56-32,r24
+  31 0026 81E0      		ldi r24,lo8(1)
+  32 0028 90E0      		ldi r25,hi8(1)
+  33 002a 9093 0000 		sts (buzzer_state)+1,r25
+  34 002e 8093 0000 		sts buzzer_state,r24
+  35               	.L3:
+  36 0032 E091 0000 		lds r30,mel_idx
+  37 0036 F091 0000 		lds r31,(mel_idx)+1
+  38 003a E050      		subi r30,lo8(-(melody))
+  39 003c F040      		sbci r31,hi8(-(melody))
+  40 003e 8081      		ld r24,Z
+  41 0040 84BD      		out 68-32,r24
+  42               	/* epilogue start */
+  43 0042 FF91      		pop r31
+  44 0044 EF91      		pop r30
+  45 0046 9F91      		pop r25
+  46 0048 8F91      		pop r24
+  47 004a 0F90      		pop r0
+  48 004c 0BBE      		out 91-32,r0
+  49 004e 0F90      		pop r0
+  50 0050 0FBE      		out __SREG__,r0
+  51 0052 0F90      		pop r0
+  52 0054 1F90      		pop __zero_reg__
+  53 0056 1895      		reti
+  54               	.L6:
+  55 0058 18BA      		out 56-32,__zero_reg__
+  56 005a 1092 0000 		sts (buzzer_state)+1,__zero_reg__
+  57 005e 1092 0000 		sts buzzer_state,__zero_reg__
+GAS LISTING C:\Users\Á¤¹Î±³\AppData\Local\Temp/ccNFmLgr.s 			page 2
+
+
+  58 0062 00C0      		rjmp .L3
+  59               		.size	__vector_10, .-__vector_10
+  60               	.global	read_adc
+  61               		.type	read_adc, @function
+  62               	read_adc:
+  63               	/* prologue: function */
+  64               	/* frame size = 0 */
+  65 0064 369A      		sbi 38-32,6
+  66               	.L8:
+  67 0066 349B      		sbis 38-32,4
+  68 0068 00C0      		rjmp .L8
+  69 006a 24B1      		in r18,36-32
+  70 006c 45B1      		in r20,37-32
+  71 006e 942F      		mov r25,r20
+  72 0070 80E0      		ldi r24,lo8(0)
+  73 0072 30E0      		ldi r19,lo8(0)
+  74 0074 282B      		or r18,r24
+  75 0076 392B      		or r19,r25
+  76 0078 C901      		movw r24,r18
+  77               	/* epilogue start */
+  78 007a 0895      		ret
+  79               		.size	read_adc, .-read_adc
+  80               	.global	clean_fnd
+  81               		.type	clean_fnd, @function
+  82               	clean_fnd:
+  83               	/* prologue: function */
+  84               	/* frame size = 0 */
+  85 007c 15BA      		out 53-32,__zero_reg__
+  86 007e E5E6      		ldi r30,lo8(101)
+  87 0080 F0E0      		ldi r31,hi8(101)
+  88 0082 81E0      		ldi r24,lo8(1)
+  89 0084 8083      		st Z,r24
+  90 0086 20E4      		ldi r18,lo8(8000)
+  91 0088 3FE1      		ldi r19,hi8(8000)
+  92 008a C901      		movw r24,r18
+  93               	/* #APP */
+  94               	 ;  105 "c:/winavr-20100110/lib/gcc/../../avr/include/util/delay_basic.h" 1
+  95 008c 0197      		1: sbiw r24,1
+  96 008e 01F4      		brne 1b
+  97               	 ;  0 "" 2
+  98               	/* #NOAPP */
+  99 0090 82E0      		ldi r24,lo8(2)
+ 100 0092 8083      		st Z,r24
+ 101 0094 C901      		movw r24,r18
+ 102               	/* #APP */
+ 103               	 ;  105 "c:/winavr-20100110/lib/gcc/../../avr/include/util/delay_basic.h" 1
+ 104 0096 0197      		1: sbiw r24,1
+ 105 0098 01F4      		brne 1b
+ 106               	 ;  0 "" 2
+ 107               	/* #NOAPP */
+ 108 009a 84E0      		ldi r24,lo8(4)
+ 109 009c 8083      		st Z,r24
+ 110 009e C901      		movw r24,r18
+ 111               	/* #APP */
+ 112               	 ;  105 "c:/winavr-20100110/lib/gcc/../../avr/include/util/delay_basic.h" 1
+ 113 00a0 0197      		1: sbiw r24,1
+ 114 00a2 01F4      		brne 1b
+GAS LISTING C:\Users\Á¤¹Î±³\AppData\Local\Temp/ccNFmLgr.s 			page 3
+
+
+ 115               	 ;  0 "" 2
+ 116               	/* #NOAPP */
+ 117 00a4 88E0      		ldi r24,lo8(8)
+ 118 00a6 8083      		st Z,r24
+ 119 00a8 C901      		movw r24,r18
+ 120               	/* #APP */
+ 121               	 ;  105 "c:/winavr-20100110/lib/gcc/../../avr/include/util/delay_basic.h" 1
+ 122 00aa 0197      		1: sbiw r24,1
+ 123 00ac 01F4      		brne 1b
+ 124               	 ;  0 "" 2
+ 125               	/* #NOAPP */
+ 126 00ae 1BBA      		out 59-32,__zero_reg__
+ 127               	/* epilogue start */
+ 128 00b0 0895      		ret
+ 129               		.size	clean_fnd, .-clean_fnd
+ 130               	.global	ctrl_level
+ 131               		.type	ctrl_level, @function
+ 132               	ctrl_level:
+ 133               	/* prologue: function */
+ 134               	/* frame size = 0 */
+ 135 00b2 8756      		subi r24,lo8(871)
+ 136 00b4 9340      		sbci r25,hi8(871)
+ 137 00b6 00F0      		brlo .L19
+ 138 00b8 0895      		ret
+ 139               	.L19:
+ 140 00ba 8091 0000 		lds r24,Sem
+ 141 00be 9091 0000 		lds r25,(Sem)+1
+ 142 00c2 60E0      		ldi r22,lo8(0)
+ 143 00c4 70E0      		ldi r23,hi8(0)
+ 144 00c6 40E0      		ldi r20,lo8(err)
+ 145 00c8 50E0      		ldi r21,hi8(err)
+ 146 00ca 0E94 0000 		call OSSemPend
+ 147 00ce 8091 0000 		lds r24,level
+ 148 00d2 9091 0000 		lds r25,(level)+1
+ 149 00d6 0196      		adiw r24,1
+ 150 00d8 9093 0000 		sts (level)+1,r25
+ 151 00dc 8093 0000 		sts level,r24
+ 152 00e0 8091 0000 		lds r24,level
+ 153 00e4 9091 0000 		lds r25,(level)+1
+ 154 00e8 0497      		sbiw r24,4
+ 155 00ea 01F0      		breq .L20
+ 156               	.L15:
+ 157 00ec 28EE      		ldi r18,lo8(1000)
+ 158 00ee 33E0      		ldi r19,hi8(1000)
+ 159 00f0 40E9      		ldi r20,lo8(400)
+ 160 00f2 51E0      		ldi r21,hi8(400)
+ 161               	.L16:
+ 162 00f4 CA01      		movw r24,r20
+ 163               	/* #APP */
+ 164               	 ;  105 "c:/winavr-20100110/lib/gcc/../../avr/include/util/delay_basic.h" 1
+ 165 00f6 0197      		1: sbiw r24,1
+ 166 00f8 01F4      		brne 1b
+ 167               	 ;  0 "" 2
+ 168               	/* #NOAPP */
+ 169 00fa 2150      		subi r18,lo8(-(-1))
+ 170 00fc 3040      		sbci r19,hi8(-(-1))
+ 171 00fe 01F4      		brne .L16
+GAS LISTING C:\Users\Á¤¹Î±³\AppData\Local\Temp/ccNFmLgr.s 			page 4
+
+
+ 172 0100 8091 0000 		lds r24,Sem
+ 173 0104 9091 0000 		lds r25,(Sem)+1
+ 174 0108 0E94 0000 		call OSSemPost
+ 175 010c 0895      		ret
+ 176               	.L20:
+ 177 010e 81E0      		ldi r24,lo8(1)
+ 178 0110 90E0      		ldi r25,hi8(1)
+ 179 0112 9093 0000 		sts (level)+1,r25
+ 180 0116 8093 0000 		sts level,r24
+ 181 011a 00C0      		rjmp .L15
+ 182               		.size	ctrl_level, .-ctrl_level
+ 183               	.global	__vector_6
+ 184               		.type	__vector_6, @function
+ 185               	__vector_6:
+ 186 011c 1F92      		push __zero_reg__
+ 187 011e 0F92      		push r0
+ 188 0120 0FB6      		in r0,__SREG__
+ 189 0122 0F92      		push r0
+ 190 0124 0BB6      		in r0,91-32
+ 191 0126 0F92      		push r0
+ 192 0128 1124      		clr __zero_reg__
+ 193 012a 2F93      		push r18
+ 194 012c 3F93      		push r19
+ 195 012e 4F93      		push r20
+ 196 0130 5F93      		push r21
+ 197 0132 6F93      		push r22
+ 198 0134 7F93      		push r23
+ 199 0136 8F93      		push r24
+ 200 0138 9F93      		push r25
+ 201 013a AF93      		push r26
+ 202 013c BF93      		push r27
+ 203 013e EF93      		push r30
+ 204 0140 FF93      		push r31
+ 205               	/* prologue: Signal */
+ 206               	/* frame size = 0 */
+ 207 0142 8091 0000 		lds r24,Sem
+ 208 0146 9091 0000 		lds r25,(Sem)+1
+ 209 014a 60E0      		ldi r22,lo8(0)
+ 210 014c 70E0      		ldi r23,hi8(0)
+ 211 014e 40E0      		ldi r20,lo8(err)
+ 212 0150 50E0      		ldi r21,hi8(err)
+ 213 0152 0E94 0000 		call OSSemPend
+ 214 0156 81E0      		ldi r24,lo8(1)
+ 215 0158 90E0      		ldi r25,hi8(1)
+ 216 015a 9093 0000 		sts (decision_level)+1,r25
+ 217 015e 8093 0000 		sts decision_level,r24
+ 218 0162 8091 0000 		lds r24,Sem
+ 219 0166 9091 0000 		lds r25,(Sem)+1
+ 220 016a 0E94 0000 		call OSSemPost
+ 221               	/* epilogue start */
+ 222 016e FF91      		pop r31
+ 223 0170 EF91      		pop r30
+ 224 0172 BF91      		pop r27
+ 225 0174 AF91      		pop r26
+ 226 0176 9F91      		pop r25
+ 227 0178 8F91      		pop r24
+ 228 017a 7F91      		pop r23
+GAS LISTING C:\Users\Á¤¹Î±³\AppData\Local\Temp/ccNFmLgr.s 			page 5
+
+
+ 229 017c 6F91      		pop r22
+ 230 017e 5F91      		pop r21
+ 231 0180 4F91      		pop r20
+ 232 0182 3F91      		pop r19
+ 233 0184 2F91      		pop r18
+ 234 0186 0F90      		pop r0
+ 235 0188 0BBE      		out 91-32,r0
+ 236 018a 0F90      		pop r0
+ 237 018c 0FBE      		out __SREG__,r0
+ 238 018e 0F90      		pop r0
+ 239 0190 1F90      		pop __zero_reg__
+ 240 0192 1895      		reti
+ 241               		.size	__vector_6, .-__vector_6
+ 242               	.global	BuzzerTask
+ 243               		.type	BuzzerTask, @function
+ 244               	BuzzerTask:
+ 245 0194 0F93      		push r16
+ 246 0196 1F93      		push r17
+ 247               	/* prologue: function */
+ 248               	/* frame size = 0 */
+ 249 0198 8091 0000 		lds r24,b_grp
+ 250 019c 9091 0000 		lds r25,(b_grp)+1
+ 251 01a0 6FEF      		ldi r22,lo8(-1)
+ 252 01a2 42E0      		ldi r20,lo8(2)
+ 253 01a4 20E0      		ldi r18,lo8(0)
+ 254 01a6 30E0      		ldi r19,hi8(0)
+ 255 01a8 00E0      		ldi r16,lo8(err)
+ 256 01aa 10E0      		ldi r17,hi8(err)
+ 257 01ac 0E94 0000 		call OSFlagPend
+ 258 01b0 80E4      		ldi r24,lo8(64)
+ 259 01b2 87BF      		out 87-32,r24
+ 260 01b4 E091 0000 		lds r30,mel_idx
+ 261 01b8 F091 0000 		lds r31,(mel_idx)+1
+ 262 01bc E050      		subi r30,lo8(-(melody))
+ 263 01be F040      		sbci r31,hi8(-(melody))
+ 264 01c0 8081      		ld r24,Z
+ 265 01c2 84BD      		out 68-32,r24
+ 266 01c4 40E9      		ldi r20,lo8(400)
+ 267 01c6 51E0      		ldi r21,hi8(400)
+ 268 01c8 8091 0000 		lds r24,mel_idx
+ 269 01cc 9091 0000 		lds r25,(mel_idx)+1
+ 270 01d0 4997      		sbiw r24,25
+ 271 01d2 04F4      		brge .L29
+ 272               	.L26:
+ 273 01d4 8091 0000 		lds r24,mel_idx
+ 274 01d8 9091 0000 		lds r25,(mel_idx)+1
+ 275 01dc 0196      		adiw r24,1
+ 276 01de 9093 0000 		sts (mel_idx)+1,r25
+ 277 01e2 8093 0000 		sts mel_idx,r24
+ 278 01e6 28E8      		ldi r18,lo8(5000)
+ 279 01e8 33E1      		ldi r19,hi8(5000)
+ 280               	.L25:
+ 281 01ea CA01      		movw r24,r20
+ 282               	/* #APP */
+ 283               	 ;  105 "c:/winavr-20100110/lib/gcc/../../avr/include/util/delay_basic.h" 1
+ 284 01ec 0197      		1: sbiw r24,1
+ 285 01ee 01F4      		brne 1b
+GAS LISTING C:\Users\Á¤¹Î±³\AppData\Local\Temp/ccNFmLgr.s 			page 6
+
+
+ 286               	 ;  0 "" 2
+ 287               	/* #NOAPP */
+ 288 01f0 2150      		subi r18,lo8(-(-1))
+ 289 01f2 3040      		sbci r19,hi8(-(-1))
+ 290 01f4 01F4      		brne .L25
+ 291 01f6 8091 0000 		lds r24,mel_idx
+ 292 01fa 9091 0000 		lds r25,(mel_idx)+1
+ 293 01fe 4997      		sbiw r24,25
+ 294 0200 04F0      		brlt .L26
+ 295               	.L29:
+ 296 0202 8091 0000 		lds r24,l_grp
+ 297 0206 9091 0000 		lds r25,(l_grp)+1
+ 298 020a 6FEF      		ldi r22,lo8(-1)
+ 299 020c 41E0      		ldi r20,lo8(1)
+ 300 020e 20E0      		ldi r18,lo8(err)
+ 301 0210 30E0      		ldi r19,hi8(err)
+ 302 0212 0E94 0000 		call OSFlagPost
+ 303               	/* epilogue start */
+ 304 0216 1F91      		pop r17
+ 305 0218 0F91      		pop r16
+ 306 021a 0895      		ret
+ 307               		.size	BuzzerTask, .-BuzzerTask
+ 308               	.global	LevelTask
+ 309               		.type	LevelTask, @function
+ 310               	LevelTask:
+ 311 021c CF92      		push r12
+ 312 021e DF92      		push r13
+ 313 0220 EF92      		push r14
+ 314 0222 FF92      		push r15
+ 315 0224 0F93      		push r16
+ 316 0226 1F93      		push r17
+ 317 0228 CF93      		push r28
+ 318 022a DF93      		push r29
+ 319               	/* prologue: function */
+ 320               	/* frame size = 0 */
+ 321 022c CC24      		clr r12
+ 322 022e C394      		inc r12
+ 323 0230 C0E4      		ldi r28,lo8(8000)
+ 324 0232 DFE1      		ldi r29,hi8(8000)
+ 325 0234 22E0      		ldi r18,lo8(2)
+ 326 0236 D22E      		mov r13,r18
+ 327 0238 94E0      		ldi r25,lo8(4)
+ 328 023a E92E      		mov r14,r25
+ 329 023c 88E0      		ldi r24,lo8(8)
+ 330 023e F82E      		mov r15,r24
+ 331 0240 00C0      		rjmp .L32
+ 332               	.L31:
+ 333 0242 0E94 0000 		call read_adc
+ 334 0246 0E94 0000 		call ctrl_level
+ 335 024a E091 0000 		lds r30,level
+ 336 024e F091 0000 		lds r31,(level)+1
+ 337 0252 E050      		subi r30,lo8(-(FND_DATA))
+ 338 0254 F040      		sbci r31,hi8(-(FND_DATA))
+ 339 0256 8081      		ld r24,Z
+ 340 0258 85BB      		out 53-32,r24
+ 341 025a C092 6500 		sts 101,r12
+ 342 025e CE01      		movw r24,r28
+GAS LISTING C:\Users\Á¤¹Î±³\AppData\Local\Temp/ccNFmLgr.s 			page 7
+
+
+ 343               	/* #APP */
+ 344               	 ;  105 "c:/winavr-20100110/lib/gcc/../../avr/include/util/delay_basic.h" 1
+ 345 0260 0197      		1: sbiw r24,1
+ 346 0262 01F4      		brne 1b
+ 347               	 ;  0 "" 2
+ 348               	/* #NOAPP */
+ 349 0264 8091 0000 		lds r24,FND_DATA
+ 350 0268 85BB      		out 53-32,r24
+ 351 026a D092 6500 		sts 101,r13
+ 352 026e CE01      		movw r24,r28
+ 353               	/* #APP */
+ 354               	 ;  105 "c:/winavr-20100110/lib/gcc/../../avr/include/util/delay_basic.h" 1
+ 355 0270 0197      		1: sbiw r24,1
+ 356 0272 01F4      		brne 1b
+ 357               	 ;  0 "" 2
+ 358               	/* #NOAPP */
+ 359 0274 8091 0000 		lds r24,FND_DATA+16
+ 360 0278 85BB      		out 53-32,r24
+ 361 027a E092 6500 		sts 101,r14
+ 362 027e CE01      		movw r24,r28
+ 363               	/* #APP */
+ 364               	 ;  105 "c:/winavr-20100110/lib/gcc/../../avr/include/util/delay_basic.h" 1
+ 365 0280 0197      		1: sbiw r24,1
+ 366 0282 01F4      		brne 1b
+ 367               	 ;  0 "" 2
+ 368               	/* #NOAPP */
+ 369 0284 8091 0000 		lds r24,FND_DATA+22
+ 370 0288 85BB      		out 53-32,r24
+ 371 028a F092 6500 		sts 101,r15
+ 372 028e CE01      		movw r24,r28
+ 373               	/* #APP */
+ 374               	 ;  105 "c:/winavr-20100110/lib/gcc/../../avr/include/util/delay_basic.h" 1
+ 375 0290 0197      		1: sbiw r24,1
+ 376 0292 01F4      		brne 1b
+ 377               	 ;  0 "" 2
+ 378               	/* #NOAPP */
+ 379               	.L32:
+ 380 0294 8091 0000 		lds r24,decision_level
+ 381 0298 9091 0000 		lds r25,(decision_level)+1
+ 382 029c 0197      		sbiw r24,1
+ 383 029e 01F4      		brne .L31
+ 384 02a0 0E94 0000 		call clean_fnd
+ 385 02a4 8091 0000 		lds r24,Mbox
+ 386 02a8 9091 0000 		lds r25,(Mbox)+1
+ 387 02ac 60E0      		ldi r22,lo8(level)
+ 388 02ae 70E0      		ldi r23,hi8(level)
+ 389 02b0 0E94 0000 		call OSMboxPost
+ 390 02b4 8091 0000 		lds r24,l_grp
+ 391 02b8 9091 0000 		lds r25,(l_grp)+1
+ 392 02bc 6FEF      		ldi r22,lo8(-1)
+ 393 02be 42E8      		ldi r20,lo8(-126)
+ 394 02c0 20E0      		ldi r18,lo8(0)
+ 395 02c2 30E0      		ldi r19,hi8(0)
+ 396 02c4 00E0      		ldi r16,lo8(err)
+ 397 02c6 10E0      		ldi r17,hi8(err)
+ 398 02c8 0E94 0000 		call OSFlagPend
+ 399 02cc 00C0      		rjmp .L31
+GAS LISTING C:\Users\Á¤¹Î±³\AppData\Local\Temp/ccNFmLgr.s 			page 8
+
+
+ 400               		.size	LevelTask, .-LevelTask
+ 401               	.global	FndTask
+ 402               		.type	FndTask, @function
+ 403               	FndTask:
+ 404 02ce EF92      		push r14
+ 405 02d0 FF92      		push r15
+ 406 02d2 0F93      		push r16
+ 407 02d4 1F93      		push r17
+ 408 02d6 CF93      		push r28
+ 409 02d8 DF93      		push r29
+ 410               	/* prologue: function */
+ 411               	/* frame size = 0 */
+ 412 02da 8FEF      		ldi r24,lo8(-1)
+ 413 02dc 84BB      		out 52-32,r24
+ 414 02de 8FE0      		ldi r24,lo8(15)
+ 415 02e0 8093 6400 		sts 100,r24
+ 416 02e4 EE24      		clr r14
+ 417 02e6 E394      		inc r14
+ 418 02e8 C0E4      		ldi r28,lo8(8000)
+ 419 02ea DFE1      		ldi r29,hi8(8000)
+ 420 02ec 32E0      		ldi r19,lo8(2)
+ 421 02ee F32E      		mov r15,r19
+ 422 02f0 04E0      		ldi r16,lo8(4)
+ 423 02f2 18E0      		ldi r17,lo8(8)
+ 424               	.L37:
+ 425 02f4 8091 0000 		lds r24,Mbox+2
+ 426 02f8 9091 0000 		lds r25,(Mbox+2)+1
+ 427 02fc 60E0      		ldi r22,lo8(0)
+ 428 02fe 70E0      		ldi r23,hi8(0)
+ 429 0300 40E0      		ldi r20,lo8(err)
+ 430 0302 50E0      		ldi r21,hi8(err)
+ 431 0304 0E94 0000 		call OSMboxPend
+ 432 0308 FC01      		movw r30,r24
+ 433 030a 8081      		ld r24,Z
+ 434 030c 8735      		cpi r24,lo8(87)
+ 435 030e 01F4      		brne .L35
+ 436 0310 7091 0000 		lds r23,FND_DATA+21
+ 437 0314 6091 0000 		lds r22,FND_DATA+1
+ 438 0318 5091 0000 		lds r21,FND_DATA+20
+ 439 031c 4091 0000 		lds r20,FND_DATA+19
+ 440 0320 2BE2      		ldi r18,lo8(299)
+ 441 0322 31E0      		ldi r19,hi8(299)
+ 442               	.L36:
+ 443 0324 75BB      		out 53-32,r23
+ 444 0326 E092 6500 		sts 101,r14
+ 445 032a CE01      		movw r24,r28
+ 446               	/* #APP */
+ 447               	 ;  105 "c:/winavr-20100110/lib/gcc/../../avr/include/util/delay_basic.h" 1
+ 448 032c 0197      		1: sbiw r24,1
+ 449 032e 01F4      		brne 1b
+ 450               	 ;  0 "" 2
+ 451               	/* #NOAPP */
+ 452 0330 65BB      		out 53-32,r22
+ 453 0332 F092 6500 		sts 101,r15
+ 454 0336 CE01      		movw r24,r28
+ 455               	/* #APP */
+ 456               	 ;  105 "c:/winavr-20100110/lib/gcc/../../avr/include/util/delay_basic.h" 1
+GAS LISTING C:\Users\Á¤¹Î±³\AppData\Local\Temp/ccNFmLgr.s 			page 9
+
+
+ 457 0338 0197      		1: sbiw r24,1
+ 458 033a 01F4      		brne 1b
+ 459               	 ;  0 "" 2
+ 460               	/* #NOAPP */
+ 461 033c 55BB      		out 53-32,r21
+ 462 033e 0093 6500 		sts 101,r16
+ 463 0342 CE01      		movw r24,r28
+ 464               	/* #APP */
+ 465               	 ;  105 "c:/winavr-20100110/lib/gcc/../../avr/include/util/delay_basic.h" 1
+ 466 0344 0197      		1: sbiw r24,1
+ 467 0346 01F4      		brne 1b
+ 468               	 ;  0 "" 2
+ 469               	/* #NOAPP */
+ 470 0348 45BB      		out 53-32,r20
+ 471 034a 1093 6500 		sts 101,r17
+ 472 034e CE01      		movw r24,r28
+ 473               	/* #APP */
+ 474               	 ;  105 "c:/winavr-20100110/lib/gcc/../../avr/include/util/delay_basic.h" 1
+ 475 0350 0197      		1: sbiw r24,1
+ 476 0352 01F4      		brne 1b
+ 477               	 ;  0 "" 2
+ 478               	/* #NOAPP */
+ 479 0354 2150      		subi r18,lo8(-(-1))
+ 480 0356 3040      		sbci r19,hi8(-(-1))
+ 481 0358 8FEF      		ldi r24,hi8(-1)
+ 482 035a 2F3F      		cpi r18,lo8(-1)
+ 483 035c 3807      		cpc r19,r24
+ 484 035e 01F4      		brne .L36
+ 485 0360 8091 0000 		lds r24,b_grp
+ 486 0364 9091 0000 		lds r25,(b_grp)+1
+ 487 0368 6FEF      		ldi r22,lo8(-1)
+ 488 036a 41E0      		ldi r20,lo8(1)
+ 489 036c 20E0      		ldi r18,lo8(err)
+ 490 036e 30E0      		ldi r19,hi8(err)
+ 491 0370 0E94 0000 		call OSFlagPost
+ 492 0374 0E94 0000 		call clean_fnd
+ 493 0378 00C0      		rjmp .L37
+ 494               	.L35:
+ 495 037a F091 0000 		lds r31,FND_DATA+23
+ 496 037e E091 0000 		lds r30,FND_DATA+5
+ 497 0382 7091 0000 		lds r23,FND_DATA
+ 498 0386 6091 0000 		lds r22,FND_DATA+22
+ 499 038a 2BE2      		ldi r18,lo8(299)
+ 500 038c 31E0      		ldi r19,hi8(299)
+ 501 038e 01E0      		ldi r16,lo8(1)
+ 502 0390 40E4      		ldi r20,lo8(8000)
+ 503 0392 5FE1      		ldi r21,hi8(8000)
+ 504 0394 12E0      		ldi r17,lo8(2)
+ 505 0396 B4E0      		ldi r27,lo8(4)
+ 506 0398 A8E0      		ldi r26,lo8(8)
+ 507               	.L38:
+ 508 039a F5BB      		out 53-32,r31
+ 509 039c 0093 6500 		sts 101,r16
+ 510 03a0 CA01      		movw r24,r20
+ 511               	/* #APP */
+ 512               	 ;  105 "c:/winavr-20100110/lib/gcc/../../avr/include/util/delay_basic.h" 1
+ 513 03a2 0197      		1: sbiw r24,1
+GAS LISTING C:\Users\Á¤¹Î±³\AppData\Local\Temp/ccNFmLgr.s 			page 10
+
+
+ 514 03a4 01F4      		brne 1b
+ 515               	 ;  0 "" 2
+ 516               	/* #NOAPP */
+ 517 03a6 E5BB      		out 53-32,r30
+ 518 03a8 1093 6500 		sts 101,r17
+ 519 03ac CA01      		movw r24,r20
+ 520               	/* #APP */
+ 521               	 ;  105 "c:/winavr-20100110/lib/gcc/../../avr/include/util/delay_basic.h" 1
+ 522 03ae 0197      		1: sbiw r24,1
+ 523 03b0 01F4      		brne 1b
+ 524               	 ;  0 "" 2
+ 525               	/* #NOAPP */
+ 526 03b2 75BB      		out 53-32,r23
+ 527 03b4 B093 6500 		sts 101,r27
+ 528 03b8 CA01      		movw r24,r20
+ 529               	/* #APP */
+ 530               	 ;  105 "c:/winavr-20100110/lib/gcc/../../avr/include/util/delay_basic.h" 1
+ 531 03ba 0197      		1: sbiw r24,1
+ 532 03bc 01F4      		brne 1b
+ 533               	 ;  0 "" 2
+ 534               	/* #NOAPP */
+ 535 03be 65BB      		out 53-32,r22
+ 536 03c0 A093 6500 		sts 101,r26
+ 537 03c4 CA01      		movw r24,r20
+ 538               	/* #APP */
+ 539               	 ;  105 "c:/winavr-20100110/lib/gcc/../../avr/include/util/delay_basic.h" 1
+ 540 03c6 0197      		1: sbiw r24,1
+ 541 03c8 01F4      		brne 1b
+ 542               	 ;  0 "" 2
+ 543               	/* #NOAPP */
+ 544 03ca 2150      		subi r18,lo8(-(-1))
+ 545 03cc 3040      		sbci r19,hi8(-(-1))
+ 546 03ce 8FEF      		ldi r24,hi8(-1)
+ 547 03d0 2F3F      		cpi r18,lo8(-1)
+ 548 03d2 3807      		cpc r19,r24
+ 549 03d4 01F4      		brne .L38
+ 550 03d6 8091 0000 		lds r24,l_grp
+ 551 03da 9091 0000 		lds r25,(l_grp)+1
+ 552 03de 6FEF      		ldi r22,lo8(-1)
+ 553 03e0 41E0      		ldi r20,lo8(1)
+ 554 03e2 20E0      		ldi r18,lo8(err)
+ 555 03e4 30E0      		ldi r19,hi8(err)
+ 556 03e6 0E94 0000 		call OSFlagPost
+ 557               	/* epilogue start */
+ 558 03ea DF91      		pop r29
+ 559 03ec CF91      		pop r28
+ 560 03ee 1F91      		pop r17
+ 561 03f0 0F91      		pop r16
+ 562 03f2 FF90      		pop r15
+ 563 03f4 EF90      		pop r14
+ 564 03f6 0895      		ret
+ 565               		.size	FndTask, .-FndTask
+ 566               	.global	LedTask
+ 567               		.type	LedTask, @function
+ 568               	LedTask:
+ 569 03f8 3F92      		push r3
+ 570 03fa 4F92      		push r4
+GAS LISTING C:\Users\Á¤¹Î±³\AppData\Local\Temp/ccNFmLgr.s 			page 11
+
+
+ 571 03fc 5F92      		push r5
+ 572 03fe 6F92      		push r6
+ 573 0400 7F92      		push r7
+ 574 0402 8F92      		push r8
+ 575 0404 9F92      		push r9
+ 576 0406 AF92      		push r10
+ 577 0408 BF92      		push r11
+ 578 040a CF92      		push r12
+ 579 040c DF92      		push r13
+ 580 040e EF92      		push r14
+ 581 0410 FF92      		push r15
+ 582 0412 0F93      		push r16
+ 583 0414 1F93      		push r17
+ 584 0416 DF93      		push r29
+ 585 0418 CF93      		push r28
+ 586 041a 0F92      		push __tmp_reg__
+ 587 041c CDB7      		in r28,__SP_L__
+ 588 041e DEB7      		in r29,__SP_H__
+ 589               	/* prologue: function */
+ 590               	/* frame size = 1 */
+ 591 0420 1BBA      		out 59-32,__zero_reg__
+ 592 0422 8091 0000 		lds r24,Mbox
+ 593 0426 9091 0000 		lds r25,(Mbox)+1
+ 594 042a 60E0      		ldi r22,lo8(0)
+ 595 042c 70E0      		ldi r23,hi8(0)
+ 596 042e 40E0      		ldi r20,lo8(err)
+ 597 0430 50E0      		ldi r21,hi8(err)
+ 598 0432 0E94 0000 		call OSMboxPend
+ 599 0436 FC01      		movw r30,r24
+ 600 0438 2081      		ld r18,Z
+ 601 043a 3181      		ldd r19,Z+1
+ 602 043c 8EEC      		ldi r24,lo8(-50)
+ 603 043e 9FEF      		ldi r25,hi8(-50)
+ 604 0440 289F      		mul r18,r24
+ 605 0442 6001      		movw r12,r0
+ 606 0444 299F      		mul r18,r25
+ 607 0446 D00C      		add r13,r0
+ 608 0448 389F      		mul r19,r24
+ 609 044a D00C      		add r13,r0
+ 610 044c 1124      		clr r1
+ 611 044e 88EC      		ldi r24,lo8(200)
+ 612 0450 90E0      		ldi r25,hi8(200)
+ 613 0452 C80E      		add r12,r24
+ 614 0454 D91E      		adc r13,r25
+ 615 0456 EE24      		clr r14
+ 616 0458 FF24      		clr r15
+ 617 045a 4E01      		movw r8,r28
+ 618 045c 0894      		sec
+ 619 045e 811C      		adc r8,__zero_reg__
+ 620 0460 911C      		adc r9,__zero_reg__
+ 621 0462 60E8      		ldi r22,lo8(128)
+ 622 0464 662E      		mov r6,r22
+ 623 0466 712C      		mov r7,__zero_reg__
+ 624 0468 5524      		clr r5
+ 625 046a 5A94      		dec r5
+ 626 046c 57E5      		ldi r21,lo8(87)
+ 627 046e 452E      		mov r4,r21
+GAS LISTING C:\Users\Á¤¹Î±³\AppData\Local\Temp/ccNFmLgr.s 			page 12
+
+
+ 628 0470 4CE4      		ldi r20,lo8(76)
+ 629 0472 342E      		mov r3,r20
+ 630 0474 00E9      		ldi r16,lo8(400)
+ 631 0476 11E0      		ldi r17,hi8(400)
+ 632 0478 0894      		sec
+ 633 047a E11C      		adc r14,__zero_reg__
+ 634 047c F11C      		adc r15,__zero_reg__
+ 635 047e EC14      		cp r14,r12
+ 636 0480 FD04      		cpc r15,r13
+ 637 0482 04F4      		brge .L51
+ 638               	.L43:
+ 639 0484 8981      		ldd r24,Y+1
+ 640 0486 8C34      		cpi r24,lo8(76)
+ 641 0488 01F0      		breq .L44
+ 642 048a 8091 0000 		lds r24,clicked_switch
+ 643 048e 9091 0000 		lds r25,(clicked_switch)+1
+ 644 0492 0197      		sbiw r24,1
+ 645 0494 01F0      		breq .L52
+ 646               	.L44:
+ 647 0496 24EF      		ldi r18,lo8(500)
+ 648 0498 31E0      		ldi r19,hi8(500)
+ 649               	.L46:
+ 650 049a C801      		movw r24,r16
+ 651               	/* #APP */
+ 652               	 ;  105 "c:/winavr-20100110/lib/gcc/../../avr/include/util/delay_basic.h" 1
+ 653 049c 0197      		1: sbiw r24,1
+ 654 049e 01F4      		brne 1b
+ 655               	 ;  0 "" 2
+ 656               	/* #NOAPP */
+ 657 04a0 2150      		subi r18,lo8(-(-1))
+ 658 04a2 3040      		sbci r19,hi8(-(-1))
+ 659 04a4 01F4      		brne .L46
+ 660 04a6 0894      		sec
+ 661 04a8 E11C      		adc r14,__zero_reg__
+ 662 04aa F11C      		adc r15,__zero_reg__
+ 663 04ac EC14      		cp r14,r12
+ 664 04ae FD04      		cpc r15,r13
+ 665 04b0 04F0      		brlt .L43
+ 666               	.L51:
+ 667 04b2 8091 0000 		lds r24,Sem
+ 668 04b6 9091 0000 		lds r25,(Sem)+1
+ 669 04ba 60E0      		ldi r22,lo8(0)
+ 670 04bc 70E0      		ldi r23,hi8(0)
+ 671 04be 40E0      		ldi r20,lo8(err)
+ 672 04c0 50E0      		ldi r21,hi8(err)
+ 673 04c2 0E94 0000 		call OSSemPend
+ 674 04c6 1BBA      		out 59-32,__zero_reg__
+ 675 04c8 3982      		std Y+1,r3
+ 676               	.L50:
+ 677 04ca 8091 0000 		lds r24,Mbox+2
+ 678 04ce 9091 0000 		lds r25,(Mbox+2)+1
+ 679 04d2 B401      		movw r22,r8
+ 680 04d4 0E94 0000 		call OSMboxPost
+ 681 04d8 8091 0000 		lds r24,Sem
+ 682 04dc 9091 0000 		lds r25,(Sem)+1
+ 683 04e0 0E94 0000 		call OSSemPost
+ 684 04e4 EE24      		clr r14
+GAS LISTING C:\Users\Á¤¹Î±³\AppData\Local\Temp/ccNFmLgr.s 			page 13
+
+
+ 685 04e6 FF24      		clr r15
+ 686 04e8 00C0      		rjmp .L44
+ 687               	.L52:
+ 688 04ea 8091 0000 		lds r24,queue_to_led
+ 689 04ee 9091 0000 		lds r25,(queue_to_led)+1
+ 690 04f2 60E0      		ldi r22,lo8(0)
+ 691 04f4 70E0      		ldi r23,hi8(0)
+ 692 04f6 40E0      		ldi r20,lo8(err)
+ 693 04f8 50E0      		ldi r21,hi8(err)
+ 694 04fa 0E94 0000 		call OSQPend
+ 695 04fe FC01      		movw r30,r24
+ 696 0500 A080      		ld r10,Z
+ 697 0502 B180      		ldd r11,Z+1
+ 698 0504 1092 0000 		sts (clicked_switch)+1,__zero_reg__
+ 699 0508 1092 0000 		sts clicked_switch,__zero_reg__
+ 700 050c 97E0      		ldi r25,lo8(7)
+ 701 050e A916      		cp r10,r25
+ 702 0510 B104      		cpc r11,__zero_reg__
+ 703 0512 01F0      		breq .L53
+ 704 0514 8091 0000 		lds r24,Sem
+ 705 0518 9091 0000 		lds r25,(Sem)+1
+ 706 051c 60E0      		ldi r22,lo8(0)
+ 707 051e 70E0      		ldi r23,hi8(0)
+ 708 0520 40E0      		ldi r20,lo8(err)
+ 709 0522 50E0      		ldi r21,hi8(err)
+ 710 0524 0E94 0000 		call OSSemPend
+ 711 0528 2BB3      		in r18,59-32
+ 712 052a C301      		movw r24,r6
+ 713 052c 00C0      		rjmp 2f
+ 714 052e 9595      	1:	asr r25
+ 715 0530 8795      		ror r24
+ 716 0532 AA94      	2:	dec r10
+ 717 0534 02F4      		brpl 1b
+ 718 0536 280F      		add r18,r24
+ 719 0538 2BBB      		out 59-32,r18
+ 720 053a 8091 0000 		lds r24,Sem
+ 721 053e 9091 0000 		lds r25,(Sem)+1
+ 722 0542 0E94 0000 		call OSSemPost
+ 723 0546 00C0      		rjmp .L44
+ 724               	.L53:
+ 725 0548 8091 0000 		lds r24,Sem
+ 726 054c 9091 0000 		lds r25,(Sem)+1
+ 727 0550 60E0      		ldi r22,lo8(0)
+ 728 0552 70E0      		ldi r23,hi8(0)
+ 729 0554 40E0      		ldi r20,lo8(err)
+ 730 0556 50E0      		ldi r21,hi8(err)
+ 731 0558 0E94 0000 		call OSSemPend
+ 732 055c 5BBA      		out 59-32,r5
+ 733 055e 4982      		std Y+1,r4
+ 734 0560 00C0      		rjmp .L50
+ 735               		.size	LedTask, .-LedTask
+ 736               	.global	main
+ 737               		.type	main, @function
+ 738               	main:
+ 739 0562 0F93      		push r16
+ 740 0564 1F93      		push r17
+ 741               	/* prologue: function */
+GAS LISTING C:\Users\Á¤¹Î±³\AppData\Local\Temp/ccNFmLgr.s 			page 14
+
+
+ 742               	/* frame size = 0 */
+ 743 0566 0E94 0000 		call OSInit
+ 744               	/* #APP */
+ 745               	 ;  136 "lab2.c" 1
+ 746 056a F894      		cli
+ 747               	 ;  0 "" 2
+ 748               	/* #NOAPP */
+ 749 056c 8FEF      		ldi r24,lo8(-1)
+ 750 056e 8ABB      		out 58-32,r24
+ 751 0570 80E1      		ldi r24,lo8(16)
+ 752 0572 87BB      		out 55-32,r24
+ 753 0574 8FEC      		ldi r24,lo8(-49)
+ 754 0576 82B9      		out 34-32,r24
+ 755 0578 8AE0      		ldi r24,lo8(10)
+ 756 057a 8ABF      		out 90-32,r24
+ 757 057c 80E3      		ldi r24,lo8(48)
+ 758 057e 89BF      		out 89-32,r24
+ 759 0580 8FB7      		in r24,__SREG__
+ 760 0582 8068      		ori r24,lo8(-128)
+ 761 0584 8FBF      		out __SREG__,r24
+ 762 0586 17B8      		out 39-32,__zero_reg__
+ 763 0588 87E8      		ldi r24,lo8(-121)
+ 764 058a 86B9      		out 38-32,r24
+ 765 058c 83E0      		ldi r24,lo8(3)
+ 766 058e 85BD      		out 69-32,r24
+ 767 0590 17BE      		out 87-32,__zero_reg__
+ 768 0592 E091 0000 		lds r30,mel_idx
+ 769 0596 F091 0000 		lds r31,(mel_idx)+1
+ 770 059a E050      		subi r30,lo8(-(melody))
+ 771 059c F040      		sbci r31,hi8(-(melody))
+ 772 059e 8081      		ld r24,Z
+ 773 05a0 84BD      		out 68-32,r24
+ 774 05a2 81E0      		ldi r24,lo8(1)
+ 775 05a4 90E0      		ldi r25,hi8(1)
+ 776 05a6 0E94 0000 		call OSSemCreate
+ 777 05aa 9093 0000 		sts (Sem)+1,r25
+ 778 05ae 8093 0000 		sts Sem,r24
+ 779 05b2 80E0      		ldi r24,lo8(0)
+ 780 05b4 90E0      		ldi r25,hi8(0)
+ 781 05b6 0E94 0000 		call OSMboxCreate
+ 782 05ba 9093 0000 		sts (Mbox)+1,r25
+ 783 05be 8093 0000 		sts Mbox,r24
+ 784 05c2 80E0      		ldi r24,lo8(0)
+ 785 05c4 90E0      		ldi r25,hi8(0)
+ 786 05c6 0E94 0000 		call OSMboxCreate
+ 787 05ca 9093 0000 		sts (Mbox+2)+1,r25
+ 788 05ce 8093 0000 		sts Mbox+2,r24
+ 789 05d2 80E0      		ldi r24,lo8(0)
+ 790 05d4 90E0      		ldi r25,hi8(0)
+ 791 05d6 0E94 0000 		call OSMboxCreate
+ 792 05da 9093 0000 		sts (Mbox+4)+1,r25
+ 793 05de 8093 0000 		sts Mbox+4,r24
+ 794 05e2 80E0      		ldi r24,lo8(led_queue)
+ 795 05e4 90E0      		ldi r25,hi8(led_queue)
+ 796 05e6 64E0      		ldi r22,lo8(4)
+ 797 05e8 70E0      		ldi r23,hi8(4)
+ 798 05ea 0E94 0000 		call OSQCreate
+GAS LISTING C:\Users\Á¤¹Î±³\AppData\Local\Temp/ccNFmLgr.s 			page 15
+
+
+ 799 05ee 9093 0000 		sts (queue_to_led)+1,r25
+ 800 05f2 8093 0000 		sts queue_to_led,r24
+ 801 05f6 00E0      		ldi r16,lo8(err)
+ 802 05f8 10E0      		ldi r17,hi8(err)
+ 803 05fa 80E0      		ldi r24,lo8(0)
+ 804 05fc B801      		movw r22,r16
+ 805 05fe 0E94 0000 		call OSFlagCreate
+ 806 0602 9093 0000 		sts (l_grp)+1,r25
+ 807 0606 8093 0000 		sts l_grp,r24
+ 808 060a 80E0      		ldi r24,lo8(0)
+ 809 060c B801      		movw r22,r16
+ 810 060e 0E94 0000 		call OSFlagCreate
+ 811 0612 9093 0000 		sts (b_grp)+1,r25
+ 812 0616 8093 0000 		sts b_grp,r24
+ 813 061a 80E0      		ldi r24,lo8(gs(FndTask))
+ 814 061c 90E0      		ldi r25,hi8(gs(FndTask))
+ 815 061e 60E0      		ldi r22,lo8(0)
+ 816 0620 70E0      		ldi r23,hi8(0)
+ 817 0622 40E0      		ldi r20,lo8(TaskStk+127)
+ 818 0624 50E0      		ldi r21,hi8(TaskStk+127)
+ 819 0626 21E0      		ldi r18,lo8(1)
+ 820 0628 0E94 0000 		call OSTaskCreate
+ 821 062c 80E0      		ldi r24,lo8(gs(BuzzerTask))
+ 822 062e 90E0      		ldi r25,hi8(gs(BuzzerTask))
+ 823 0630 60E0      		ldi r22,lo8(0)
+ 824 0632 70E0      		ldi r23,hi8(0)
+ 825 0634 40E0      		ldi r20,lo8(TaskStk+255)
+ 826 0636 50E0      		ldi r21,hi8(TaskStk+255)
+ 827 0638 22E0      		ldi r18,lo8(2)
+ 828 063a 0E94 0000 		call OSTaskCreate
+ 829 063e 80E0      		ldi r24,lo8(gs(LevelTask))
+ 830 0640 90E0      		ldi r25,hi8(gs(LevelTask))
+ 831 0642 60E0      		ldi r22,lo8(0)
+ 832 0644 70E0      		ldi r23,hi8(0)
+ 833 0646 40E0      		ldi r20,lo8(TaskStk+383)
+ 834 0648 50E0      		ldi r21,hi8(TaskStk+383)
+ 835 064a 23E0      		ldi r18,lo8(3)
+ 836 064c 0E94 0000 		call OSTaskCreate
+ 837 0650 80E0      		ldi r24,lo8(gs(LedTask))
+ 838 0652 90E0      		ldi r25,hi8(gs(LedTask))
+ 839 0654 60E0      		ldi r22,lo8(0)
+ 840 0656 70E0      		ldi r23,hi8(0)
+ 841 0658 40E0      		ldi r20,lo8(TaskStk+511)
+ 842 065a 50E0      		ldi r21,hi8(TaskStk+511)
+ 843 065c 24E0      		ldi r18,lo8(4)
+ 844 065e 0E94 0000 		call OSTaskCreate
+ 845 0662 0E94 0000 		call OSStart
+ 846 0666 80E0      		ldi r24,lo8(0)
+ 847 0668 90E0      		ldi r25,hi8(0)
+ 848               	/* epilogue start */
+ 849 066a 1F91      		pop r17
+ 850 066c 0F91      		pop r16
+ 851 066e 0895      		ret
+ 852               		.size	main, .-main
+ 853               	.global	__vector_5
+ 854               		.type	__vector_5, @function
+ 855               	__vector_5:
+GAS LISTING C:\Users\Á¤¹Î±³\AppData\Local\Temp/ccNFmLgr.s 			page 16
+
+
+ 856 0670 1F92      		push __zero_reg__
+ 857 0672 0F92      		push r0
+ 858 0674 0FB6      		in r0,__SREG__
+ 859 0676 0F92      		push r0
+ 860 0678 0BB6      		in r0,91-32
+ 861 067a 0F92      		push r0
+ 862 067c 1124      		clr __zero_reg__
+ 863 067e 2F93      		push r18
+ 864 0680 3F93      		push r19
+ 865 0682 4F93      		push r20
+ 866 0684 5F93      		push r21
+ 867 0686 6F93      		push r22
+ 868 0688 7F93      		push r23
+ 869 068a 8F93      		push r24
+ 870 068c 9F93      		push r25
+ 871 068e AF93      		push r26
+ 872 0690 BF93      		push r27
+ 873 0692 EF93      		push r30
+ 874 0694 FF93      		push r31
+ 875               	/* prologue: Signal */
+ 876               	/* frame size = 0 */
+ 877 0696 8091 0000 		lds r24,Sem
+ 878 069a 9091 0000 		lds r25,(Sem)+1
+ 879 069e 60E0      		ldi r22,lo8(0)
+ 880 06a0 70E0      		ldi r23,hi8(0)
+ 881 06a2 40E0      		ldi r20,lo8(err)
+ 882 06a4 50E0      		ldi r21,hi8(err)
+ 883 06a6 0E94 0000 		call OSSemPend
+ 884 06aa 8091 0000 		lds r24,switch_state
+ 885 06ae 9091 0000 		lds r25,(switch_state)+1
+ 886 06b2 892B      		or r24,r25
+ 887 06b4 01F4      		brne .L57
+ 888 06b6 1BBA      		out 59-32,__zero_reg__
+ 889               	.L57:
+ 890 06b8 81E0      		ldi r24,lo8(1)
+ 891 06ba 90E0      		ldi r25,hi8(1)
+ 892 06bc 9093 0000 		sts (switch_state)+1,r25
+ 893 06c0 8093 0000 		sts switch_state,r24
+ 894 06c4 9093 0000 		sts (clicked_switch)+1,r25
+ 895 06c8 8093 0000 		sts clicked_switch,r24
+ 896 06cc 8091 0000 		lds r24,switch_count
+ 897 06d0 9091 0000 		lds r25,(switch_count)+1
+ 898 06d4 0897      		sbiw r24,8
+ 899 06d6 04F4      		brge .L58
+ 900 06d8 8091 0000 		lds r24,switch_count
+ 901 06dc 9091 0000 		lds r25,(switch_count)+1
+ 902 06e0 0196      		adiw r24,1
+ 903 06e2 9093 0000 		sts (switch_count)+1,r25
+ 904 06e6 8093 0000 		sts switch_count,r24
+ 905 06ea 8091 0000 		lds r24,queue_to_led
+ 906 06ee 9091 0000 		lds r25,(queue_to_led)+1
+ 907 06f2 60E0      		ldi r22,lo8(switch_count)
+ 908 06f4 70E0      		ldi r23,hi8(switch_count)
+ 909 06f6 0E94 0000 		call OSQPost
+ 910               	.L58:
+ 911 06fa 8091 0000 		lds r24,Sem
+ 912 06fe 9091 0000 		lds r25,(Sem)+1
+GAS LISTING C:\Users\Á¤¹Î±³\AppData\Local\Temp/ccNFmLgr.s 			page 17
+
+
+ 913 0702 0E94 0000 		call OSSemPost
+ 914               	/* epilogue start */
+ 915 0706 FF91      		pop r31
+ 916 0708 EF91      		pop r30
+ 917 070a BF91      		pop r27
+ 918 070c AF91      		pop r26
+ 919 070e 9F91      		pop r25
+ 920 0710 8F91      		pop r24
+ 921 0712 7F91      		pop r23
+ 922 0714 6F91      		pop r22
+ 923 0716 5F91      		pop r21
+ 924 0718 4F91      		pop r20
+ 925 071a 3F91      		pop r19
+ 926 071c 2F91      		pop r18
+ 927 071e 0F90      		pop r0
+ 928 0720 0BBE      		out 91-32,r0
+ 929 0722 0F90      		pop r0
+ 930 0724 0FBE      		out __SREG__,r0
+ 931 0726 0F90      		pop r0
+ 932 0728 1F90      		pop __zero_reg__
+ 933 072a 1895      		reti
+ 934               		.size	__vector_5, .-__vector_5
+ 935               	.global	level
+ 936               		.data
+ 937               		.type	level, @object
+ 938               		.size	level, 2
+ 939               	level:
+ 940 0000 0100      		.word	1
+ 941               	.global	switch_state
+ 942               	.global	switch_state
+ 943               		.section .bss
+ 944               		.type	switch_state, @object
+ 945               		.size	switch_state, 2
+ 946               	switch_state:
+ 947 0000 0000      		.skip 2,0
+ 948               	.global	clicked_switch
+ 949               	.global	clicked_switch
+ 950               		.type	clicked_switch, @object
+ 951               		.size	clicked_switch, 2
+ 952               	clicked_switch:
+ 953 0002 0000      		.skip 2,0
+ 954               	.global	switch_count
+ 955               		.data
+ 956               		.type	switch_count, @object
+ 957               		.size	switch_count, 2
+ 958               	switch_count:
+ 959 0002 FFFF      		.word	-1
+ 960               	.global	decision_level
+ 961               	.global	decision_level
+ 962               		.section .bss
+ 963               		.type	decision_level, @object
+ 964               		.size	decision_level, 2
+ 965               	decision_level:
+ 966 0004 0000      		.skip 2,0
+ 967               	.global	buzzer_state
+ 968               	.global	buzzer_state
+ 969               		.type	buzzer_state, @object
+GAS LISTING C:\Users\Á¤¹Î±³\AppData\Local\Temp/ccNFmLgr.s 			page 18
+
+
+ 970               		.size	buzzer_state, 2
+ 971               	buzzer_state:
+ 972 0006 0000      		.skip 2,0
+ 973               	.global	mel_idx
+ 974               	.global	mel_idx
+ 975               		.type	mel_idx, @object
+ 976               		.size	mel_idx, 2
+ 977               	mel_idx:
+ 978 0008 0000      		.skip 2,0
+ 979               	.global	melody
+ 980               		.data
+ 981               		.type	melody, @object
+ 982               		.size	melody, 25
+ 983               	melody:
+ 984 0004 42        		.byte	66
+ 985 0005 2B        		.byte	43
+ 986 0006 11        		.byte	17
+ 987 0007 2B        		.byte	43
+ 988 0008 42        		.byte	66
+ 989 0009 42        		.byte	66
+ 990 000a 42        		.byte	66
+ 991 000b 2B        		.byte	43
+ 992 000c 2B        		.byte	43
+ 993 000d 2B        		.byte	43
+ 994 000e 42        		.byte	66
+ 995 000f 61        		.byte	97
+ 996 0010 61        		.byte	97
+ 997 0011 42        		.byte	66
+ 998 0012 2B        		.byte	43
+ 999 0013 11        		.byte	17
+ 1000 0014 2B        		.byte	43
+ 1001 0015 42        		.byte	66
+ 1002 0016 42        		.byte	66
+ 1003 0017 42        		.byte	66
+ 1004 0018 2B        		.byte	43
+ 1005 0019 2B        		.byte	43
+ 1006 001a 42        		.byte	66
+ 1007 001b 2B        		.byte	43
+ 1008 001c 11        		.byte	17
+ 1009               	.global	FND_DATA
+ 1010               		.type	FND_DATA, @object
+ 1011               		.size	FND_DATA, 24
+ 1012               	FND_DATA:
+ 1013 001d 3F        		.byte	63
+ 1014 001e 06        		.byte	6
+ 1015 001f 5B        		.byte	91
+ 1016 0020 4F        		.byte	79
+ 1017 0021 66        		.byte	102
+ 1018 0022 6D        		.byte	109
+ 1019 0023 7D        		.byte	125
+ 1020 0024 27        		.byte	39
+ 1021 0025 7F        		.byte	127
+ 1022 0026 6F        		.byte	111
+ 1023 0027 77        		.byte	119
+ 1024 0028 7C        		.byte	124
+ 1025 0029 39        		.byte	57
+ 1026 002a 5E        		.byte	94
+GAS LISTING C:\Users\Á¤¹Î±³\AppData\Local\Temp/ccNFmLgr.s 			page 19
+
+
+ 1027 002b 79        		.byte	121
+ 1028 002c 71        		.byte	113
+ 1029 002d 80        		.byte	-128
+ 1030 002e 40        		.byte	64
+ 1031 002f 08        		.byte	8
+ 1032 0030 3C        		.byte	60
+ 1033 0031 1E        		.byte	30
+ 1034 0032 54        		.byte	84
+ 1035 0033 38        		.byte	56
+ 1036 0034 79        		.byte	121
+ 1037               		.comm TaskStk,512,1
+ 1038               		.comm Mbox,6,1
+ 1039               		.comm queue_to_led,2,1
+ 1040               		.comm l_grp,2,1
+ 1041               		.comm b_grp,2,1
+ 1042               		.comm Sem,2,1
+ 1043               		.comm led_queue,8,1
+ 1044               		.comm err,1,1
+ 1045               	.global __do_copy_data
+ 1046               	.global __do_clear_bss
+GAS LISTING C:\Users\Á¤¹Î±³\AppData\Local\Temp/ccNFmLgr.s 			page 20
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 lab2.c
+C:\Users\Á¤¹Î±³\AppData\Local\Temp/ccNFmLgr.s:2      *ABS*:0000003f __SREG__
+C:\Users\Á¤¹Î±³\AppData\Local\Temp/ccNFmLgr.s:3      *ABS*:0000003e __SP_H__
+C:\Users\Á¤¹Î±³\AppData\Local\Temp/ccNFmLgr.s:4      *ABS*:0000003d __SP_L__
+C:\Users\Á¤¹Î±³\AppData\Local\Temp/ccNFmLgr.s:5      *ABS*:00000034 __CCP__
+C:\Users\Á¤¹Î±³\AppData\Local\Temp/ccNFmLgr.s:6      *ABS*:00000000 __tmp_reg__
+C:\Users\Á¤¹Î±³\AppData\Local\Temp/ccNFmLgr.s:7      *ABS*:00000001 __zero_reg__
+C:\Users\Á¤¹Î±³\AppData\Local\Temp/ccNFmLgr.s:11     .text:00000000 __vector_10
+C:\Users\Á¤¹Î±³\AppData\Local\Temp/ccNFmLgr.s:971    .bss:00000006 buzzer_state
+C:\Users\Á¤¹Î±³\AppData\Local\Temp/ccNFmLgr.s:977    .bss:00000008 mel_idx
+C:\Users\Á¤¹Î±³\AppData\Local\Temp/ccNFmLgr.s:983    .data:00000004 melody
+C:\Users\Á¤¹Î±³\AppData\Local\Temp/ccNFmLgr.s:62     .text:00000064 read_adc
+C:\Users\Á¤¹Î±³\AppData\Local\Temp/ccNFmLgr.s:82     .text:0000007c clean_fnd
+C:\Users\Á¤¹Î±³\AppData\Local\Temp/ccNFmLgr.s:132    .text:000000b2 ctrl_level
+                            *COM*:00000002 Sem
+                            *COM*:00000001 err
+C:\Users\Á¤¹Î±³\AppData\Local\Temp/ccNFmLgr.s:939    .data:00000000 level
+C:\Users\Á¤¹Î±³\AppData\Local\Temp/ccNFmLgr.s:185    .text:0000011c __vector_6
+C:\Users\Á¤¹Î±³\AppData\Local\Temp/ccNFmLgr.s:965    .bss:00000004 decision_level
+C:\Users\Á¤¹Î±³\AppData\Local\Temp/ccNFmLgr.s:244    .text:00000194 BuzzerTask
+                            *COM*:00000002 b_grp
+                            *COM*:00000002 l_grp
+C:\Users\Á¤¹Î±³\AppData\Local\Temp/ccNFmLgr.s:310    .text:0000021c LevelTask
+C:\Users\Á¤¹Î±³\AppData\Local\Temp/ccNFmLgr.s:1012   .data:0000001d FND_DATA
+                            *COM*:00000006 Mbox
+C:\Users\Á¤¹Î±³\AppData\Local\Temp/ccNFmLgr.s:403    .text:000002ce FndTask
+C:\Users\Á¤¹Î±³\AppData\Local\Temp/ccNFmLgr.s:568    .text:000003f8 LedTask
+C:\Users\Á¤¹Î±³\AppData\Local\Temp/ccNFmLgr.s:952    .bss:00000002 clicked_switch
+                            *COM*:00000002 queue_to_led
+C:\Users\Á¤¹Î±³\AppData\Local\Temp/ccNFmLgr.s:738    .text:00000562 main
+                            *COM*:00000008 led_queue
+                            *COM*:00000200 TaskStk
+C:\Users\Á¤¹Î±³\AppData\Local\Temp/ccNFmLgr.s:855    .text:00000670 __vector_5
+C:\Users\Á¤¹Î±³\AppData\Local\Temp/ccNFmLgr.s:946    .bss:00000000 switch_state
+C:\Users\Á¤¹Î±³\AppData\Local\Temp/ccNFmLgr.s:958    .data:00000002 switch_count
+
+UNDEFINED SYMBOLS
+OSSemPend
+OSSemPost
+OSFlagPend
+OSFlagPost
+OSMboxPost
+OSMboxPend
+OSQPend
+OSInit
+OSSemCreate
+OSMboxCreate
+OSQCreate
+OSFlagCreate
+OSTaskCreate
+OSStart
+OSQPost
+__do_copy_data
+__do_clear_bss
